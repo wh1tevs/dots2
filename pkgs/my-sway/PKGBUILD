@@ -1,0 +1,25 @@
+pkgname=my-sway
+pkgver=1
+pkgrel=1
+pkgdesc="Meta package: sway and stuff"
+arch=(any)
+url="https://github.com/wh1tevs/dots"
+license=('custom')
+install=${pkgname}.install
+source=('sway-run')
+sha256sums=('f2425ddf9d533edbd24a58d8b04eb29f0da437ec789cc6548f1acfeb3c4bfdc3')
+depends=(
+  sway
+  greetd
+  greetd-tuigreet
+  xdg-desktop-portal
+  xdg-desktop-portal-wlr
+  flameshot
+  jq
+  wmenu
+  alacritty
+)
+
+package() {
+  install -Dm755 "$srcdir/sway-run" "$pkgdir/usr/local/bin/sway-run"
+}

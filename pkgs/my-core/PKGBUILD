@@ -1,0 +1,26 @@
+pkgname=my-core
+pkgver=1
+pkgrel=1
+pkgdesc="Core console tools and basic system config"
+arch=(any)
+url="https://github.com/wh1tevs/dots"
+license=('custom')
+install=${pkgname}.install
+depends=(
+  base-devel
+  curl
+  git
+  gnupg
+  man
+  man-db
+  networkmanager
+  openssh
+  zsh
+  zsh-completions
+)
+
+package() {
+  return 0
+}
+
+# vim: :ft=bash
