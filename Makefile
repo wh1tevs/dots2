@@ -1,11 +1,11 @@
 PKGS = my-core my-dev-meta my-sway
 
-.PHONY: $(PKGS) pkgs-install pkgs-clean tmux
+.PHONY: $(PKGS) pkgs-all pkgs-clean tmux
 
 $(PKGS):
 	@cd pkgs/$@ && makepkg -si --needed --noconfirm
 
-pkgs-install: $(PKGS)
+pkgs-all: $(PKGS)
 
 pkgs-clean:
 	@find pkgs -mindepth 2 -maxdepth 2 -type d \( -name pkg -o -name src \) -exec rm -rf {} +
