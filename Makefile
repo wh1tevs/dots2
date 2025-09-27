@@ -2,8 +2,8 @@ PKGS = my-core my-dev-meta my-sway
 
 .PHONY: $(PKGS) pkgs-install pkgs-clean tmux
 
-$(pkgs):
-	@cd pkgs/$@ && makepkg -si --noconfirm
+$(PKGS):
+	@cd pkgs/$@ && makepkg -si --needed --noconfirm
 
 pkgs-install: $(PKGS)
 
