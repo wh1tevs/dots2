@@ -1,7 +1,0 @@
-post_install() {
-  if [[ -f /etc/greetd/config.toml ]]; then
-    sed -i 's|^\(command *= *"\)[^"]*\(".*\)$|\1tuigreet --cmd sway-run --unsupported-gpu\2|' /etc/greetd/config.toml
-  fi
-
-  systemctl enable --now greetd
-}
