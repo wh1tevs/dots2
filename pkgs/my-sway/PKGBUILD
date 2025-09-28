@@ -1,10 +1,10 @@
 pkgname=my-sway
-pkgver=4
+pkgver=5
 pkgrel=1
 pkgdesc="Meta package: sway and stuff"
 arch=(any)
 url="https://github.com/wh1tevs/dots"
-license=('custom')
+license=('MIT')
 depends=(
   alacritty
   brightnessctl
@@ -14,6 +14,8 @@ depends=(
   pipewire-pulse
   sway
   ttf-cascadia-code-nerd
+  noto-fonts-emoji
+  noto-fonts-cjk
   wofi
   xdg-desktop-portal
   xdg-desktop-portal-wlr
