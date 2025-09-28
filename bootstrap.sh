@@ -13,10 +13,19 @@ info() {
 
 enable_service() {
   local service="$1"
-  if [[ -d /run/systemd/system ]]; then
-    systemctl enable --now "$service"
-  else
-    info "Skipping ${service} (systemd unavailable)"
+
+  if ! command -v systemctl >/dev/null 2>&1; then
+    info "Skipping ${service} (systemctl unavailable)"
+    return
+  fi
+
+  if ! systemctl enable "$service" >/dev/null 2>&1; then
+    info "Skipping ${service}; could not enable (systemd inactive?)"
+    return
+  fi
+
+  if ! systemctl start "$service" >/dev/null 2>&1; then
+    info "Unable to start ${service} now; it will start on next boot"
   fi
 }
 
