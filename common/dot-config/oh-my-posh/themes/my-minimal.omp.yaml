@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+version: 3
+final_space: true
+transient_prompt:
+  template: "{{ if .Root }}#{{else}}${{end}}{{ if gt .Code 0 }} <red>{{.Code}}</>{{end}} "
+blocks:
+  - type: prompt
+    alignment: left
+    segments:
+      - type: path
+        style: plain
+        template: "{{if not .Writable}}ro:{{end}}{{.Path}}"
+
+      - type: git
+        style: plain
+        template: >-
+          {{""}}
+          on <blue>{{ .HEAD }}</>
+          {{if .Working.Changed}}[{{if gt .Working.Untracked 0}}<magenta>?{{.Working.Untracked}}</>{{end}}{{if gt .Working.Added 0}} <green>+{{.Working.Added}}</>{{end}}{{if gt .Working.Modified 0}} <cyan>~{{.Working.Modified}}</>{{end}}{{if gt .Working.Deleted 0}} <red>-{{.Working.Deleted}}</>{{end}}]{{end}}
+          {{if .Staging.Changed}}({{if gt .Staging.Added 0}}<green>+{{.Staging.Added}}</>{{end}}{{if gt .Staging.Modified 0}} <cyan>~{{.Staging.Modified}}</>{{end}}{{if gt .Staging.Deleted 0}} <red>-{{.Staging.Deleted}}</>{{end}}){{end}}
+          {{if gt .StashCount 0}}stashes: {{.StashCount}}{{end}}
+        properties:
+          fetch_status: true
+          fetch_stash_count: true
+          fetch_upstream_icon: true
+          untracked_modes:
+            "*": all
+          branch_icon: ""
+          commit_icon: ""
+          git_icon: "git:"
+          github_icon: "github:"
+          gitlab_icon: "gitlab:"
+          bitbucket_icon: "bitbucket:"
+          upstream_icons:
+            codecraft.dev: "codecraft:"
+
+  - type: prompt
+    alignment: right
+    segments: []
+
+  - type: prompt
+    alignment: left
+    newline: true
+    segments:
+      - type: text
+        style: plain
+        template: "{{ if .Root }}#{{else}}${{end}}"
