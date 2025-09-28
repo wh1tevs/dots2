@@ -1,6 +1,6 @@
 PKGS = my-core my-dev-meta my-sway
 
-.PHONY: $(PKGS) pkgs-all pkgs-clean tmux
+.PHONY: $(PKGS) pkgs-all pkgs-clean tmux test-bootstrap
 
 $(PKGS):
 	@cd pkgs/$@ && makepkg -si --needed --noconfirm
@@ -15,3 +15,6 @@ tmux:
 	mkdir -p $(HOME)/.config/tmux/plugins
 	git clone https://github.com/tmux-plugins/tpm.git $(HOME)/.config/tmux/plugins/tpm
 
+test-bootstrap: Dockerfile.bootstrap bootstrap.sh
+	docker build -f Dockerfile.bootstrap -t dots-bootstrap-test .
+	docker run --rm -e BOOTSTRAP_PASSWORD=testpass dots-bootstrap-test bash -lc "printf 'test-host\nEurope/Berlin\ntestuser\n' | /bootstrap.sh"
