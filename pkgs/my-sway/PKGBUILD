@@ -1,5 +1,5 @@
 pkgname=my-sway
-pkgver=5
+pkgver=6
 pkgrel=1
 pkgdesc="Meta package: sway and stuff"
 arch=(any)
@@ -13,7 +13,7 @@ depends=(
   pipewire
   pipewire-pulse
   sway
-  ttf-cascadia-code-nerd
+  ttf-cascadia-mono-nerd
   noto-fonts-emoji
   noto-fonts-cjk
   wofi
