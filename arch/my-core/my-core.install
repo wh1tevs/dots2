@@ -27,6 +27,10 @@ post_install() {
 
 post_upgrade() {
   _configure_network_stack
+  local old_conf="/etc/systemd/resolved.conf.d/home-network.conf"
+  if [[ -e $old_conf ]]; then
+    rm -f "$old_conf"
+  fi
 }
 
 post_remove() {

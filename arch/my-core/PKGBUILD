@@ -1,13 +1,13 @@
 pkgname=my-core
 pkgver=2
-pkgrel=1
+pkgrel=3
 pkgdesc="Core console tools and basic system config"
 arch=(any)
 url="https://github.com/wh1tevs/dots"
 license=('MIT')
 install=${pkgname}.install
 source=(
-  home-network.conf
+  10-home-network.conf
   10-dns-systemd-resolved.conf
 )
 sha256sums=('SKIP' 'SKIP')
@@ -22,13 +22,15 @@ depends=(
   networkmanager
   openssh
   systemd
+  stow
+  tmux
   zsh
   zsh-completions
 )
 
 package() {
-  install -Dm644 "${srcdir}/home-network.conf" \
-    "${pkgdir}/etc/systemd/resolved.conf.d/home-network.conf"
+  install -Dm644 "${srcdir}/10-home-network.conf" \
+    "${pkgdir}/etc/systemd/resolved.conf.d/10-home-network.conf"
   install -Dm644 "${srcdir}/10-dns-systemd-resolved.conf" \
     "${pkgdir}/etc/NetworkManager/conf.d/10-dns-systemd-resolved.conf"
 }

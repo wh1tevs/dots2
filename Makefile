@@ -1,20 +1,18 @@
-PKGS = my-core my-dev-meta my-sway
-
-.PHONY: $(PKGS) pkgs-all pkgs-clean tmux test-bootstrap
+PKGS := $(notdir $(patsubst %/,%,$(wildcard pkgs/*/)))
+ARCH_PKGS := $(notdir $(patsubst %/,%,$(wildcard arch/*/)))
 
 $(PKGS):
-	@cd pkgs/$@ && makepkg -si --needed --noconfirm
+	@stow --no-folding --dotfiles --target=$(HOME) -d pkgs -R $@
 
-pkgs-all: $(PKGS)
+$(ARCH_PKGS):
+	@cd arch/$@ && makepkg -si --needed --noconfirm
 
 pkgs-clean:
-	@find pkgs -mindepth 2 -maxdepth 2 -type d \( -name pkg -o -name src \) -exec rm -rf {} +
-	@find pkgs -mindepth 2 -maxdepth 2 -type f -name "*.pkg.tar.*" -delete
+	@find arch -mindepth 2 -maxdepth 2 -type d \( -name pkg -o -name src \) -exec rm -rf {} +
+	@find arch -mindepth 2 -maxdepth 2 -type f -name "*.pkg.tar.*" -delete
 
-tmux:
+tmux-plugins:
 	mkdir -p $(HOME)/.config/tmux/plugins
 	git clone https://github.com/tmux-plugins/tpm.git $(HOME)/.config/tmux/plugins/tpm
 
-test-bootstrap: Dockerfile.bootstrap bootstrap.sh
-	docker build -f Dockerfile.bootstrap -t dots-bootstrap-test .
-	docker run --rm -e BOOTSTRAP_PASSWORD=testpass dots-bootstrap-test bash -lc "printf 'test-host\nEurope/Berlin\ntestuser\n' | /bootstrap.sh"
+.PHONY: $(PKGS) $(ARCH_PKGS) pkgs-clean tmux-plugins
