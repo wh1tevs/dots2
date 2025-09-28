@@ -1,11 +1,16 @@
 pkgname=my-core
-pkgver=1
+pkgver=2
 pkgrel=1
 pkgdesc="Core console tools and basic system config"
 arch=(any)
 url="https://github.com/wh1tevs/dots"
-license=('custom')
+license=('MIT')
 install=${pkgname}.install
+source=(
+  home-network.conf
+  10-dns-systemd-resolved.conf
+)
+sha256sums=('SKIP' 'SKIP')
 depends=(
   base-devel
   curl
@@ -13,14 +18,19 @@ depends=(
   gnupg
   man
   man-db
+  neovim
   networkmanager
   openssh
+  systemd
   zsh
   zsh-completions
 )
 
 package() {
-  return 0
+  install -Dm644 "${srcdir}/home-network.conf" \
+    "${pkgdir}/etc/systemd/resolved.conf.d/home-network.conf"
+  install -Dm644 "${srcdir}/10-dns-systemd-resolved.conf" \
+    "${pkgdir}/etc/NetworkManager/conf.d/10-dns-systemd-resolved.conf"
 }
 
 # vim: :ft=bash
