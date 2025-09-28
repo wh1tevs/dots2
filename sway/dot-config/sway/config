@@ -30,6 +30,11 @@ default_border pixel 2
 default_floating_border normal 2
 floating_modifier $mod normal
 
+# Keep file pickers as floating dialogs
+for_window [app_id="xdg-desktop-portal-gtk"] floating enable
+for_window [title=".*Open File.*"] floating enable
+for_window [title=".*Save File.*"] floating enable
+
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
