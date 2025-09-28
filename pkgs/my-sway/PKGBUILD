@@ -1,5 +1,5 @@
 pkgname=my-sway
-pkgver=7
+pkgver=8
 pkgrel=1
 pkgdesc="Meta package: sway and stuff"
 arch=(any)
@@ -20,4 +20,6 @@ depends=(
   wofi
   xdg-desktop-portal
   xdg-desktop-portal-wlr
+  libappindicator-gtk3
+  org.freedesktop.secrets
 )
