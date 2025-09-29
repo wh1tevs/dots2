@@ -1,6 +1,6 @@
 pkgname=my-sway
 pkgver=8
-pkgrel=1
+pkgrel=2
 pkgdesc="Meta package: sway and stuff"
 arch=(any)
 url="https://github.com/wh1tevs/dots"
@@ -13,6 +13,7 @@ depends=(
   pipewire
   pipewire-pulse
   sway
+  xorg-xwayland
   ttf-cascadia-mono-nerd
   adwaita-fonts
   noto-fonts-emoji
