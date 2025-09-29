@@ -1,12 +1,15 @@
 [Unit]
-Description=OpenFortiVPN with SAML (%i)
+Description=OpenFortiVPN with SAML (%I)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-Environment=FORTI_SERVER=%i
-ExecStart=/bin/sh -c 'xdg-open-saml $FORTI_SERVER | sudo /usr/bin/openfortivpn $FORTI_SERVER --cookie-on-stdin'
+Environment="XDG_OPEN_SAML_ARGS="
+Environment="XDG_OPEN_SAML_GATEWAY=%I"
+Environment="OPENFORTIVPN_ARGS="
+Environment="OPENFORTIVPN_GATEWAY=%I"
+ExecStart=/bin/sh -c 'xdg-open-saml $XDG_OPEN_SAML_ARGS $XDG_OPEN_SAML_GATEWAY | sudo /usr/bin/openfortivpn --cookie-on-stdin $OPENFORTIVPN_ARGS $OPENFORTIVPN_GATEWAY'
 Restart=on-failure
 RestartSec=5
 
