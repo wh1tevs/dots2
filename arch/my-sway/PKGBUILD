@@ -1,6 +1,6 @@
 pkgname=my-sway
 pkgver=8
-pkgrel=2
+pkgrel=3
 pkgdesc="Meta package: sway and stuff"
 arch=(any)
 url="https://github.com/wh1tevs/dots"
@@ -15,6 +15,7 @@ depends=(
   sway
   xorg-xwayland
   ttf-cascadia-mono-nerd
+  wl-clipboard
   adwaita-fonts
   noto-fonts-emoji
   noto-fonts-cjk
