@@ -139,7 +139,7 @@ info "Enabling systemd-timesyncd"
 enable_service systemd-timesyncd.service
 
 info "Creating user $NEW_USER"
-useradd -m -U -G wheel "$NEW_USER"
+useradd -m -U -G wheel,audio,video,input,storage "$NEW_USER"
 
 info "Setting password for $NEW_USER"
 if [[ -n "${BOOTSTRAP_PASSWORD:-}" ]]; then
