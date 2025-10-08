@@ -6,7 +6,7 @@ if [[ -z "$VOLTA_HOME" ]]; then
   export VOLTA_HOME="$HOME/.volta"
 fi
 
-if [[ -z "$(grep "$VOLTA_HOME/bin" <<< "$PATH")" ]]; then
+if grep -q "$VOLTA_HOME/bin" <<< "$PATH"; then
   export PATH="$VOLTA_HOME/bin:$PATH"
 fi
 
