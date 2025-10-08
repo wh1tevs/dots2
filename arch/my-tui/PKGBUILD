@@ -1,0 +1,25 @@
+pkgname=my-tui
+pkgver=1
+pkgrel=2
+pkgdesc="Meta package: tui apps"
+arch=(any)
+url="https://github.com/wh1tevs/dots"
+license=('MIT')
+depends=(
+  btop
+  lazydocker
+  lazygit
+  impala # wifi
+
+  yazi # file manager
+
+  ffmpeg
+  7zip
+  jq
+  poppler
+  fd
+  ripgrep
+  fzf
+  resvg
+  imagemagick
+)
