@@ -1,6 +1,6 @@
 pkgname=my-core
 pkgver=2
-pkgrel=3
+pkgrel=4
 pkgdesc="Core console tools and basic system config"
 arch=(any)
 url="https://github.com/wh1tevs/dots"
@@ -26,6 +26,11 @@ depends=(
   tmux
   zsh
   zsh-completions
+
+  jq
+  fd
+  ripgrep
+  fzf
 )
 
 package() {

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Lock the screen
+pidof hyprlock || hyprlock &
+
+# Avoid running screensaver when locked
+pkill -f "$TERMINAL --class Screensaver"
+
+# vim: ft=bash

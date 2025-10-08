@@ -1,0 +1,4 @@
+export TERMINAL=kitty
+export EDITOR=nvim
+
+# vim: ft=sh

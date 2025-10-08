@@ -1,0 +1,83 @@
+#!/bin/bash
+
+set -euo pipefail
+
+ACTION=${1:-open}
+shift || true
+
+COMMAND=""
+SEARCH_RE=""
+WORKSPACE=""
+
+get_win_addr() {
+  hyprctl clients -j | jq -er --arg cls "$1" '.[] | select(.class | test($cls)) | .address' 2>/dev/null || true
+}
+
+get_win_workspace() {
+  hyprctl clients -j | jq -er --arg cls "$1" '.[] | select(.class | test($cls)) | .workspace.name' 2>/dev/null || true
+}
+
+get_active_workspace() {
+  hyprctl activeworkspace -j | jq -er '.name'
+}
+
+open() {
+  local addr
+  local workspace
+  addr="$(get_win_addr "$SEARCH_RE")"
+  workspace="$(get_win_workspace "$SEARCH_RE")"
+
+  if [[ -z "$addr" ]]; then
+    eval "$COMMAND" &
+
+    for _ in {1..50}; do
+      sleep 0.1
+      addr="$(get_win_addr "$SEARCH_RE")"
+      [[ -n "$addr" ]] && break
+    done
+
+    hyprctl dispatch movetoworkspacesilent "special:$WORKSPACE,address:$addr"
+  fi
+
+  if [[ "$workspace" == "special:$WORKSPACE" ]]; then
+    hyprctl dispatch togglespecialworkspace "$WORKSPACE"
+    exit 0
+  else
+    hyprctl dispatch focuswindow "address:$addr"
+    exit 0
+  fi
+
+  # [[ -z "$addr" ]] && exit 1
+
+  # hyprctl --batch "dispatch movetoworkspacesilent special:$WS_NAME,address:$addr; dispatch togglespecialworkspace $WS_NAME"
+}
+
+move() {
+  local addr
+  local workspace
+  addr="$(get_win_addr "$SEARCH_RE")"
+  workspace="$(get_win_workspace "$SEARCH_RE")"
+
+  [[ -z "$addr" ]] && open && exit 0
+
+  if [[ "$workspace" != "special:$WORKSPACE" ]]; then
+    hyprctl dispatch movetoworkspace "special:$WORKSPACE,address:$addr"
+    exit 0
+  fi
+}
+
+while getopts "c:r:W:" opt; do
+  case "$opt" in
+  c) COMMAND="$OPTARG" ;;
+  r) SEARCH_RE="$OPTARG" ;;
+  W) WORKSPACE="$OPTARG" ;;
+  *) ;;
+  esac
+done
+
+case "$ACTION" in
+move) move ;;
+*) open ;;
+esac
+
+# vim: ft=bash
