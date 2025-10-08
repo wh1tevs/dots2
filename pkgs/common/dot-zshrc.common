@@ -36,7 +36,8 @@ alias ls="/bin/ls -ghAG $LS_OPTIONS"
 alias lsl="/bin/ls -hlA $LS_OPTIONS"
 
 if [[ ! -f "/bin/hx" && -f "/bin/helix" ]]; then
-    alias hx="/bin/helix"
+  alias hx="/bin/helix"
+fi
 
 if command -v yazi &>/dev/null; then
   function y() {
