@@ -6,15 +6,19 @@ ACTION=${1:-open}
 shift || true
 
 COMMAND=""
-SEARCH_RE=""
-WORKSPACE=""
+CLS_RE=""
+NAME=""
+
+get_win_json() {
+  hyprctl clients -j | jq -e --arg cls "$CLS_RE" '.[] | select(.class | test($cls))' 2>/dev/null || true
+}
 
 get_win_addr() {
-  hyprctl clients -j | jq -er --arg cls "$1" '.[] | select(.class | test($cls)) | .address' 2>/dev/null || true
+  get_win_json | jq -er '.address' 2>/dev/null || true
 }
 
 get_win_workspace() {
-  hyprctl clients -j | jq -er --arg cls "$1" '.[] | select(.class | test($cls)) | .workspace.name' 2>/dev/null || true
+  get_win_json | jq -er '.workspace.name' 2>/dev/null || true
 }
 
 get_active_workspace() {
@@ -22,61 +26,54 @@ get_active_workspace() {
 }
 
 open() {
-  local addr
-  local workspace
-  addr="$(get_win_addr "$SEARCH_RE")"
-  workspace="$(get_win_workspace "$SEARCH_RE")"
+  local addr="$(get_win_addr)"
+  local workspace="$(get_win_workspace)"
+  local target_workspace="special:$NAME"
+  local tag="$NAME"
+
+  if [[ -z $addr || "$workspace" == "$target_workspace" ]]; then
+    hyprctl dispatch togglespecialworkspace "$NAME"
+  fi
 
   if [[ -z "$addr" ]]; then
     eval "$COMMAND" &
 
     for _ in {1..50}; do
       sleep 0.1
-      addr="$(get_win_addr "$SEARCH_RE")"
+      addr="$(get_win_addr)"
       [[ -n "$addr" ]] && break
     done
 
-    hyprctl dispatch movetoworkspacesilent "special:$WORKSPACE,address:$addr"
+    hyprctl --batch "dispatch tagwindow +$tag address:$addr; dispatch movetoworkspacesilent $target_workspace,tag:$tag"
   fi
 
-  if [[ "$workspace" == "special:$WORKSPACE" ]]; then
-    hyprctl dispatch togglespecialworkspace "$WORKSPACE"
-    exit 0
-  else
-    hyprctl dispatch focuswindow "address:$addr"
-    exit 0
+  if [[ "$workspace" != "$target_workspace" ]]; then
+    hyprctl dispatch focuswindow "tag:$tag"
   fi
 
-  # [[ -z "$addr" ]] && exit 1
-
-  # hyprctl --batch "dispatch movetoworkspacesilent special:$WS_NAME,address:$addr; dispatch togglespecialworkspace $WS_NAME"
+  exit 0
 }
 
 move() {
-  local addr
-  local workspace
-  addr="$(get_win_addr "$SEARCH_RE")"
-  workspace="$(get_win_workspace "$SEARCH_RE")"
+  local selector="$1"
+  local target_workspace="$2"
 
-  [[ -z "$addr" ]] && open && exit 0
-
-  if [[ "$workspace" != "special:$WORKSPACE" ]]; then
-    hyprctl dispatch movetoworkspace "special:$WORKSPACE,address:$addr"
-    exit 0
-  fi
+  hyprctl --batch "dispatch movetoworkspace $target_workspace, $selector; dispatch focuswindow $selector"
 }
 
-while getopts "c:r:W:" opt; do
+while getopts "c:C:N:" opt; do
   case "$opt" in
   c) COMMAND="$OPTARG" ;;
-  r) SEARCH_RE="$OPTARG" ;;
-  W) WORKSPACE="$OPTARG" ;;
+  C) CLS_RE="$OPTARG" ;;
+  N) NAME="$OPTARG" ;;
   *) ;;
   esac
 done
 
+# [[ $ACTION == "open" && (-z $COMMAND || -z $CLS_RE || -z $NAME) ]] && exit 1
+
 case "$ACTION" in
-move) move ;;
+move) move "tag:$NAME" "special:$NAME" ;;
 *) open ;;
 esac
 
